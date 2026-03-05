@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from pathlib import Path
 
 st.set_page_config(page_title="Monitoring", page_icon="🌪️", layout="wide")
 
@@ -69,13 +70,15 @@ st.markdown("---")
 st.title("Monitoring")
 st.markdown("Real-time trends, correlations, and city-level monitoring")
 
+# This works everywhere (local AND cloud)
+data_path = Path(__file__).parent.parent.parent / "datasets" / "dashboard_df.csv"
+
 @st.cache_data
 def load_data():
-    df = pd.read_csv("../datasets/dashboard_df.csv")
-    df['date_day'] = pd.to_datetime(df['date_day'])
-    return df
+    return pd.read_csv(data_path)
 
 df = load_data()
+
 
 # Create tabs for different monitoring views
 tab1, tab2, tab3, tab4 = st.tabs([" City Explorer", "📈 Trends", "🏙️ City Comparison", " Correlations"])

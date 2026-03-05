@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from pathlib import Path
 
 # --------------------------------
 # Page configuration
@@ -247,9 +248,11 @@ st.markdown("---")
 # --------------------------------
 # Data preview (SAFE LOADER)
 # --------------------------------
+data_path = Path(__file__).parent.parent / "datasets" / "dashboard_df.csv"
+
 @st.cache_data
 def load_preview():
-    return pd.read_csv("../datasets/dashboard_df.csv")
+    return pd.read_csv(data_path)
 
 df = load_preview()
 

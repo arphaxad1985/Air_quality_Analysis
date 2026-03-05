@@ -66,7 +66,7 @@ Data was collected using APIs from Open-Meteo website, processed in Jupyter note
 ## Dashboard Design
 
 **Main Page: Air Quality Dashboard**  
-Has side panel with 5 tabs for all other pages. Main content includes tabs of the other pages.
+Has side panel with 4 tabs for all other pages. Main content includes tabs of the other pages.
 
 **Overview Page**  
 Main content includes dataset preview, basic statistics, and fundamental visualizations. Side panel has tabs for all pages.
@@ -75,16 +75,16 @@ Main content includes dataset preview, basic statistics, and fundamental visuali
 Has city comparisons, detailed analysis, and AQI health guidelines. Side panel has all pages tabs, filter settings for selecting city comparison by the metric.
 
 **Monitoring Page**  
-Has real-time trends, correlations, and city-level monitoring.
+Has real-time trends, correlations, and city-level monitoring. Side panel
 
 **Predictions Page**  
-Has atmospheric regime analysis and AQI risk forecasting.
+Alongside side panel, has atmospheric regime analysis and AQI risk forecasting.
 
 ## Unfixed Bugs
 
-1. **Multiclass prediction model was underfitting**, even though I used GridCV and hyperparameter tuning to get ExtraTrees classifier and n_components to 20. Needs more time for refining.
+1. **Streamlit deployment challenge** with tracking files while online. First page shows loaded dataframe but prediction page gives error of having wrong dataframe with just 2 features.
 
-2. **Streamlit deployment challenge** with tracking files while online. First page shows loaded dataframe but prediction page gives error of having wrong dataframe with just 2 features.
+2. **Streamlit: mapping clusters and risk scores** during the training of models that would handle the streamlit app. Coupled with the fact that prediction would have to be with the input of few significant features.
 
 ## Development Roadmap
 

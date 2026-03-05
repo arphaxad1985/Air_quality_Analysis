@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from pathlib import Path
 
 st.set_page_config(page_title="Insights", page_icon="🌪️", layout="wide")
 
@@ -68,9 +69,12 @@ st.markdown("---")
 st.title(" Insights")
 st.markdown("City comparisons, detailed analysis, and AQI health guidelines")
 
+# This works everywhere (local AND cloud)
+data_path = Path(__file__).parent.parent.parent / "datasets" / "dashboard_df.csv"
+
 @st.cache_data
 def load_data():
-    return pd.read_csv("../datasets/dashboard_df.csv")
+    return pd.read_csv(data_path)
 
 df = load_data()
 

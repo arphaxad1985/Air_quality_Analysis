@@ -16,3 +16,32 @@ Notebooks/.ipynb_checkpoints/
 *.tmp
 ~
 Thumbs.db
+
+.DS_Store
+.cache.sqlite
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+Notebooks/.ipynb_checkpoints/
+*.checkpoint.ipynb
+.DS_Store 
+.cache.sqlite
+*.sqlite*
+.ipynb_checkpoints/
+*.pkl
+*.h5
+*.feather
+*.pptx~
+*.tmp
+~
+Thumbs.db
+
+# Backup and temporary pickle files
+*_2025*.pkl
+*_2026*.pkl
+temp_*.pkl
+backup_*.pkl
+
+# BUT keep our main model files
+!weather_regime_cluster_v1.pkl
+!aqi_risk_classifier_v1.pkl

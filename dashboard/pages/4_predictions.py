@@ -74,50 +74,35 @@ st.title("🔮 Machine Learning Models")
 
 st.markdown("**About Predictions** — This app applies both unsupervised models (K-Means and PCA) and supervised learning model (ExtraTrees classifier) for clustering weather regimes and Multiclass classification of AQI Risk respectively.")
 
-# Load models from central location
+# Load models from central location (works everywhere)
 @st.cache_resource
 def load_models():
     models = {}
     
-    # Direct path to the central models folder
+    # Path to models folder - works locally AND on Streamlit Cloud
     models_dir = Path(__file__).parent.parent.parent / "models"
     
-    # Load cluster model (saved as dictionary)
+    # Load cluster model (new 5-feature version)
     cluster_path = models_dir / "weather_regime_cluster_v1.pkl"
     if cluster_path.exists():
         try:
-            cluster_model = joblib.load(cluster_path)
-            # Check if it's a dictionary or pipeline
-            if isinstance(cluster_model, dict):
-                models['cluster'] = cluster_model
-                st.sidebar.success("✓ Weather cluster model loaded (dictionary)")
-            else:
-                # If it's a pipeline, wrap it in a dictionary
-                models['cluster'] = {
-                    'pipeline': cluster_model,
-                    'features': getattr(cluster_model, 'feature_names_in_', 
-                                       ['ozone', 'nitrogen_dioxide', 'sulphur_dioxide', 'temperature_2m', 'pm2_5']),
-                    'regime_labels': {0: "Clean Air - Low Pollution", 1: "Moderate Pollution - Cool", 
-                                     2: "High Pollution - Warm", 3: "Severe Pollution Event"},
-                    'cluster_profiles': {}
-                }
-                st.sidebar.success("**✓ Weather cluster model loaded (pipeline)**")
+            models['cluster'] = joblib.load(cluster_path)
+            st.sidebar.success("✓ Weather cluster model loaded")
         except Exception as e:
             st.sidebar.error(f"Error loading cluster model: {e}")
     else:
         st.sidebar.error(f"❌ Cluster model not found at {cluster_path}")
     
-# Load AQI model (NEW 5-feature model)
-    aqi_path = models_dir / "aqi_risk_classifier_v1.pkl"  
+    # Load AQI model (new 5-feature version)
+    aqi_path = models_dir / "aqi_risk_classifier_v1.pkl"
     if aqi_path.exists():
         try:
-            aqi_model = joblib.load(aqi_path)
-            models['aqi'] = aqi_model
-            st.sidebar.success("**✓ AQI 5-feature model loaded**")
+            models['aqi'] = joblib.load(aqi_path)
+            st.sidebar.success("✓ AQI 5-feature model loaded")
         except Exception as e:
             st.sidebar.warning(f"⚠️ AQI model not loaded: {e}")
     else:
-        st.sidebar.info("ℹ️ AQI 5-feature model not found. Please train the model first.")
+        st.sidebar.info("ℹ️ AQI model not found")
     
     return models
 

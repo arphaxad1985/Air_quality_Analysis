@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 st.set_page_config(page_title="Overview", page_icon="🌪️", layout="wide")
 
@@ -66,9 +67,13 @@ st.markdown("---")
 
 st.title(" The Basic Overview")
 st.markdown("Dataset preview, basic statistics, and fundamental visualizations")
+
+# This works everywhere (local AND cloud)
+data_path = Path(__file__).parent.parent.parent / "datasets" / "dashboard_df.csv"
+
 @st.cache_data
 def load_data():
-    return pd.read_csv("../datasets/dashboard_df.csv")
+    return pd.read_csv(data_path)
 
 df = load_data()
 
