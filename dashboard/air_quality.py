@@ -256,6 +256,11 @@ def load_preview():
 
 df = load_preview()
 
+#  CLEAN DATE COLUMN HERE 
+df['date_day'] = df['date_day'].astype(str).str.split(' to ').str[0]
+df['date_day'] = pd.to_datetime(df['date_day'], errors='coerce')
+df = df.dropna(subset=['date_day'])
+
 # --------------------------------
 # Quick KPIs
 # --------------------------------

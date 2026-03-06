@@ -79,7 +79,15 @@ def load_data():
 
 df = load_data()
 
+#CLEAN DATE COLUMN HERE 
+df['date_day'] = df['date_day'].astype(str).str.split(' to ').str[0]
+df['date_day'] = pd.to_datetime(df['date_day'], errors='coerce')
+df = df.dropna(subset=['date_day'])
 
+# Convert problematic column to numeric
+if 'Value' in df.columns:
+    df['Value'] = pd.to_numeric(df['Value'], errors='coerce')
+    
 # Create tabs for different monitoring views
 tab1, tab2, tab3, tab4 = st.tabs([" City Explorer", "📈 Trends", "🏙️ City Comparison", " Correlations"])
 
