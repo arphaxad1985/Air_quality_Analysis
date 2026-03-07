@@ -250,13 +250,19 @@ with st.sidebar:
     # This pushes everything below down
     st.markdown("<br>" * 1, unsafe_allow_html=True)
     
-    # --------------------------------
-    # LOGO AT THE BOTTOM OF SIDEBAR
+# --------------------------------
+    # ROBUST LOGO LOADING - REPLACED SECTION
     # --------------------------------
     
-    logo_path = "logo.png"
+    import os
+    from pathlib import Path
+    from PIL import Image
+    import datetime
     
-    if os.path.exists(logo_path):
+    # Construct the path in the same reliable way you did for your data
+    logo_path = Path(__file__).parent / "logo.png"
+    
+    if logo_path.exists():
         try:
             logo = Image.open(logo_path)
             # Center the logo
@@ -271,11 +277,18 @@ with st.sidebar:
                 </div>
                 """, unsafe_allow_html=True)
         except Exception as e:
+            # Fallback if image loads but has issues
             st.markdown("**ECO4N6**")
             st.caption(f"⚖️ © {datetime.datetime.now().year}")
     else:
-        st.markdown("**ECO4N6**")
-        st.caption(f"⚖️ © {datetime.datetime.now().year}")
+        # Fallback if file not found
+        st.markdown(f"""
+        <div style='text-align: center; padding: 10px;'>
+            <div style='font-size: 1.2rem; font-weight: bold; color: #E0FFFF;'>ECO4N6</div>
+            <div style='font-size: 0.8rem; font-style: italic; color: #FFE4E1;'>Pioneering Sustainable<br>Forensic Techniques</div>
+            <div style='font-size: 0.7rem; color: #FFE4E1; margin-top: 5px;'>⚖️ © {datetime.datetime.now().year}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # --------------------------------
 # Header
@@ -374,7 +387,6 @@ st.caption("**Use the navigation buttons above or the sidebar to explore pages.*
 
 # Add at the very bottom of air_quality.py
 import datetime
-
 st.markdown("---")
 st.markdown(f"""
 <div style='text-align: center; color: #aaa; font-size: 0.9rem;'>
