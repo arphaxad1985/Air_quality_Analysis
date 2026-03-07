@@ -62,12 +62,21 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Then your headers
+# --------------------------------
+# Header
+# --------------------------------
 st.markdown('<div class="main-header">🌫️ Air Quality & Weather Analysis Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
+    unsafe_allow_html=True
+)
+st.markdown(
+    '<div style="text-align: center; color: black; font-size: 0.9rem; margin-top: -10px; margin-bottom: 10px;">⚖️ © ECO 4N6 Limited. All rights reserved. 🌱</div>',
+    unsafe_allow_html=True
+)
 st.markdown("---")
 
-st.title("Monitoring")
+st.title("📈 Monitoring")
 st.markdown("Real-time trends, correlations, and city-level monitoring")
 
 # This works everywhere (local AND cloud)
@@ -264,3 +273,11 @@ st.write("Explore atmospheric regime clustering and AQI risk forecasting")
 
 if st.button("Go to Predictions Page", use_container_width=True):
     st.switch_page("pages/4_predictions.py")
+
+#footnote
+import datetime
+st.markdown(f"""
+<div style='text-align: center; color: #aaa; font-size: 0.9rem;'>
+    🌱 <b>ECO 4N6 Limited</b> 🌱 © {datetime.datetime.now().year} | Environmental Intelligence | Pioneering Sustainable Forensic Techniques ⚖️
+</div>
+""", unsafe_allow_html=True)

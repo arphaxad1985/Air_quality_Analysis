@@ -61,12 +61,21 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Then your headers
+# --------------------------------
+# Header
+# --------------------------------
 st.markdown('<div class="main-header">🌫️ Air Quality & Weather Analysis Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
+    unsafe_allow_html=True
+)
+st.markdown(
+    '<div style="text-align: center; color: black; font-size: 0.9rem; margin-top: -10px; margin-bottom: 10px;">⚖️ © ECO 4N6 Limited. All rights reserved. 🌱</div>',
+    unsafe_allow_html=True
+)
 st.markdown("---")
 
-st.title(" Insights")
+st.title(" 🔎Insights")
 st.markdown("City comparisons, detailed analysis, and AQI health guidelines")
 
 # This works everywhere (local AND cloud)
@@ -287,9 +296,39 @@ with col4:
     """)
 
 st.markdown("---")
-st.info("""
-**Note:** Based on US EPA AQI standards. AQI above 200 is considered "Very Unhealthy" 
-and above 300 is "Hazardous". Sensitive groups include children, elderly, and 
-people with respiratory or heart conditions.
-""")
-st.markdown("---")
+st.markdown("""
+<div style="
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 25px;
+    border-radius: 15px;
+    border: 3px solid #4fc3f7;
+    box-shadow: 0 8px 16px rgba(0, 105, 148, 0.4);
+    margin: 20px 0;
+">
+    <h4 style="color: white; margin-top: 0; font-size: 1.4rem; text-align: center; border-bottom: 2px solid #4fc3f7; padding-bottom: 10px;">
+        ⚠️ HEALTH & SAFETY INFORMATION ⚠️
+    </h4>
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <div style="font-size: 3rem; background: rgba(79, 195, 247, 0.2); padding: 15px; border-radius: 50%;">🌫️</div>
+        <div style="flex: 1;">
+            <p style="color: white; font-size: 1.1rem; margin: 5px 0;">
+                <strong>🔴 AQI > 200:</strong> <span style="background: #ff4d4d; color: white; padding: 3px 10px; border-radius: 20px;">Very Unhealthy</span>
+            </p>
+            <p style="color: white; font-size: 1.1rem; margin: 5px 0;">
+                <strong>🟣 AQI > 300:</strong> <span style="background: #9c27b0; color: white; padding: 3px 10px; border-radius: 20px;">Hazardous</span>
+            </p>
+            <p style="color: white; font-size: 1.1rem; margin: 10px 0 0 0; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;">
+                👥 <strong>Sensitive groups:</strong> children, elderly, respiratory/heart conditions
+            </p>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+#footnote
+import datetime
+st.markdown(f"""
+<div style='text-align: center; color: #aaa; font-size: 0.9rem;'>
+    🌱 <b>ECO 4N6 Limited</b> 🌱 © {datetime.datetime.now().year} | Environmental Intelligence | Pioneering Sustainable Forensic Techniques ⚖️
+</div>
+""", unsafe_allow_html=True)

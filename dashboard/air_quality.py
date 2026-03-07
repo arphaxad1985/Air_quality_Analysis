@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
+import datetime
+from PIL import Image
+import os
 
 # --------------------------------
 # Page configuration
@@ -11,6 +14,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
 
 # --------------------------------
 # Styling - Elegant Red with Sea Blue Accents
@@ -209,6 +213,70 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Hide automatic page navigation by streamlit
+st.markdown("""
+<style>
+    /* Hide the entire page navigation section */
+    [data-testid="stSidebarNav"] {
+        display: none !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --------------------------------
+# SIDEBAR - WITH BUTTONS AND LOGO AT BOTTOM
+# --------------------------------
+with st.sidebar:
+    st.markdown("###  Explore Dashboard")
+    st.markdown("---")
+    
+    # Sidebar navigation buttons (these will appear at the top)
+    if st.button("🏠 Home", use_container_width=True):
+        st.switch_page("air_quality.py")
+    
+    
+    if st.button("📊 Overview", use_container_width=True):
+        st.switch_page("pages/1_overview.py")
+    
+    if st.button("🔎 Insights", use_container_width=True):
+        st.switch_page("pages/2_insights.py")
+    
+    if st.button("📈 Monitoring", use_container_width=True):
+        st.switch_page("pages/3_monitoring.py")
+    
+    if st.button("🔮 Predictions", use_container_width=True):
+        st.switch_page("pages/4_predictions.py")
+    
+    # This pushes everything below down
+    st.markdown("<br>" * 1, unsafe_allow_html=True)
+    
+    # --------------------------------
+    # LOGO AT THE BOTTOM OF SIDEBAR
+    # --------------------------------
+    
+    logo_path = "logo.png"
+    
+    if os.path.exists(logo_path):
+        try:
+            logo = Image.open(logo_path)
+            # Center the logo
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                st.image(logo, width=150)
+                st.markdown(f"""
+                <div style='text-align: center; margin-top: 5px;'>
+                    <span style='color: #E0FFFF; font-size: 0.7rem;'>
+                        ⚖️ © {datetime.datetime.now().year} ECO 4N6 Limited
+                    </span>
+                </div>
+                """, unsafe_allow_html=True)
+        except Exception as e:
+            st.markdown("**ECO4N6**")
+            st.caption(f"⚖️ © {datetime.datetime.now().year}")
+    else:
+        st.markdown("**ECO4N6**")
+        st.caption(f"⚖️ © {datetime.datetime.now().year}")
+
 # --------------------------------
 # Header
 # --------------------------------
@@ -217,30 +285,32 @@ st.markdown(
     '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
     unsafe_allow_html=True
 )
-
-st.markdown("---")
+st.markdown(
+    '<div style="text-align: center; color: black; font-size: 0.9rem; margin-top: -10px; margin-bottom: 10px;">⚖️ © ECO 4N6 Limited. All rights reserved. 🌱</div>',
+    unsafe_allow_html=True
+)
 
 # --------------------------------
 # Navigation
 # --------------------------------
-st.subheader("📋 Navigation")
+st.subheader("🌍 Navigation")
 
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    if st.button("Overview", use_container_width=True):
+    if st.button("📊 Overview", use_container_width=True):
         st.switch_page("pages/1_overview.py")
 
 with col2:
-    if st.button("Insights", use_container_width=True):
+    if st.button("🔎 Insights", use_container_width=True):
         st.switch_page("pages/2_insights.py")
 
 with col3:
-    if st.button("Monitoring", use_container_width=True):
+    if st.button("📈 Monitoring", use_container_width=True):
         st.switch_page("pages/3_monitoring.py")
 
 with col4:
-    if st.button("Predictions", use_container_width=True):
+    if st.button("🔮Predictions", use_container_width=True):
         st.switch_page("pages/4_predictions.py")
 
 st.markdown("---")
@@ -301,3 +371,14 @@ st.info("""
 """)
 
 st.caption("**Use the navigation buttons above or the sidebar to explore pages.**")
+
+# Add at the very bottom of air_quality.py
+import datetime
+
+st.markdown("---")
+st.markdown(f"""
+<div style='text-align: center; color: #aaa; font-size: 0.9rem;'>
+    🌱 <b>ECO 4N6 Limited</b> 🌱 © {datetime.datetime.now().year} | Environmental Intelligence | Pioneering Sustainable Forensic Techniques ⚖️
+</div>
+""", unsafe_allow_html=True)
+

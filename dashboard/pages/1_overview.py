@@ -60,13 +60,22 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Then your headers
+# --------------------------------
+# Header
+# --------------------------------
 st.markdown('<div class="main-header">🌫️ Air Quality & Weather Analysis Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
+    unsafe_allow_html=True
+)
+st.markdown(
+    '<div style="text-align: center; color: black; font-size: 0.9rem; margin-top: -10px; margin-bottom: 10px;">⚖️ © ECO 4N6 Limited. All rights reserved. 🌱</div>',
+    unsafe_allow_html=True
+)
 st.markdown("---")
 
-st.title(" The Basic Overview")
-st.markdown("Dataset preview, basic statistics, and fundamental visualizations")
+st.title(" 📊 The Overview")
+st.markdown("**Please scroll down for:** 1.Dataset preview, 2 Basic statistics, and 3.Fundamental visualizations")
 
 # This works everywhere (local AND cloud)
 data_path = Path(__file__).parent.parent.parent / "datasets" / "dashboard_df.csv"
@@ -78,12 +87,12 @@ def load_data():
 df = load_data()
 
 # Dataset Preview
-st.header("Dataset Preview")
+st.header("1.Dataset Preview")
 with st.expander("View Full Dataset", expanded=False):
     st.dataframe(df, use_container_width=True)
     
 # Basic Statistics
-st.header("Basic Statistics")
+st.header("2.Basic Statistics")
 col1, col2 = st.columns([1, 2])
 
 with col1:
@@ -106,7 +115,7 @@ with col2:
     st.dataframe(df.describe(), use_container_width=True)
 
 # Basic Visualizations
-st.header("Basic Visualizations")
+st.header("3.Basic Visualizations")
 
 # AQI Distribution
 st.subheader("Average Air Quality Index (AQI) by City")
@@ -163,3 +172,12 @@ with col2:
     ax3.grid(True, alpha=0.3)
     plt.colorbar(scatter, ax=ax3, label='AQI')
     st.pyplot(fig3)
+
+#footnote
+import datetime
+st.markdown("---")
+st.markdown(f"""
+<div style='text-align: center; color: #aaa; font-size: 0.9rem;'>
+    🌱 <b>ECO 4N6 Limited</b> 🌱 © {datetime.datetime.now().year} | Environmental Intelligence | Pioneering Sustainable Forensic Techniques ⚖️
+</div>
+""", unsafe_allow_html=True)
