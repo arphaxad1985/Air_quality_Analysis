@@ -149,7 +149,7 @@ Alongside side panel, a Machine Learning Models page that divides further into a
 | **Streamlit page loading errors due to file and model path issues** | Fixed dataset and model loading paths across all pages using `Path(__file__).parent.parent.parent` for consistent file resolution. Resolved "FileNotFoundError" and model loading failures in deployed environment. |
 | **Prediction page showing wrong dataframe with only 2 features** | Corrected feature names in training script to match actual dataset columns (`pm2_5`, `pm10`, `ozone`, `nitrogen_dioxide`, `sulphur_dioxide`). Retrained model to v5 with proper feature mapping. |
 | **Cluster misclassification** | Implemented distance-based correction using actual cluster centers from training data. Added logic to reassign moderate pollution values from Cluster 3 to appropriate clusters based on temperature and pollutant levels. |
-| **Missing "Unhealthy" predictions** | Added EPA-aligned manual override (PM2.5 > 55.5 triggers 🔴 Unhealthy) since dataset contains no AQI >150 samples. Model now correctly warns for extreme pollution events. |
+| **Missing "Unhealthy" predictions** | Added EPA-aligned manual override (PM2.5 > 55.5 triggers 🔴 Health Risk) since dataset contains no AQI >150 samples. Model now correctly warns for extreme pollution events. |
 | **Model versioning confusion** | Cleaned up models folder to keep only essential files: original notebook models (`final_aqi_classifier.pkl`, `weather_air_regime_cluster.pkl`) and Streamlit-optimized versions (`weather_regime_cluster_v1.pkl`, `aqi_risk_classifier_v5.pkl`). |
 
 
@@ -163,14 +163,18 @@ Alongside side panel, a Machine Learning Models page that divides further into a
 
 The app can be found at: https://arphaxad1985-air-quality-analysis-dashboardair-quality-6oh1ha.streamlit.app/
 
-## Main Data Analysis Libraries
+## Main Data Analysis Libraries/ Requirements
 
-- pandas
-- numpy
-- matplotlib
-- seaborn
-- scikit-learn
-- jupyter
+- streamlit>=1.28.0
+- pandas>=2.0.0
+- numpy>=1.24.0
+- plotly>=5.14.0
+- matplotlib>=3.7.0
+- scikit-learn>=1.3.0
+- joblib>=1.3.0
+- statsmodels>=0.14.0
+- jupyter nootbook
+
 
 ## AI Tools
 
@@ -199,16 +203,16 @@ air_quality_analysis/
 │   ├── 03_clustering_analysis.ipynb      # K-Means & PCA for weather regimes
 │   └── 04_classification_modeling.ipynb  # ExtraTrees for AQI risk prediction
 │
-├── datasets/                            # 📊 Processed data
-│   └── dashboard_df.csv                  # Final integrated dataset (360 records, 18 features)
+├── datasets/                            #  Processed data
+│   └── dashboard_df.csv                  # Final integrated dataset (360 records)
 │
-├── models/                               # 🧠 Trained machine learning models
+├── models/                               #  Trained machine learning models
 │   ├── weather_air_regime_cluster.pkl     # Original K-Means cluster model (notebook)
 │   ├── final_aqi_classifier.pkl           # Original ExtraTrees classifier (notebook)
 │   ├── weather_regime_cluster_v1.pkl      # Streamlit-optimized cluster model
-│   └── aqi_risk_classifier_v5.pkl         # Streamlit-optimized AQI classifier (inclusive Good)
+│   └── aqi_risk_classifier_v5.pkl         # Streamlit-optimized AQI classifier
 │
-├── figures/                              # 🖼️ Images for documentation
+├── figures/                              #  Images for documentation
 │   └── dashboard.png                      # Dashboard preview screenshot
 │
 ├── .gitignore                            # Git ignore rules
