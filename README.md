@@ -221,47 +221,43 @@ The app can be found at: https://arphaxad1985-air-quality-analysis-dashboardair-
 - Google Search with AI responses
 
 ## Repository Structure
-air_quality_analysis/
-│
-├── dashboard/                          # 🎨 Streamlit dashboard application
-│   ├── air_quality.py                   # Main app entry point
-│   ├── pages/                            # Multi-page dashboard sections
-│   │   ├── 1_overview.py                 # Dataset preview & basic statistics
-│   │   ├── 2_insights.py                 # City comparisons & AQI health guidelines
-│   │   ├── 3_monitoring.py                # Trends & correlations
-│   │   └── 4_predictions.py               # ML predictions (weather regimes & AQI risk)
-│   ├── train_cluster_model.py             # Weather regime clustering training script
-│   ├── train_aqi_classifier.py            # AQI risk classifier training script
-│   ├── requirements.txt                   # Dashboard-specific dependencies
-│   └── logo.png                           # ECO 4N6 company logo
-│
-├── notebooks/                           # 📓 Jupyter notebooks for EDA & model development
-│   ├── 01_data_collection.ipynb          # API data fetching from Open-Meteo
-│   ├── 02_eda_visualization.ipynb        # Exploratory data analysis
-│   ├── 03_clustering_analysis.ipynb      # K-Means & PCA for weather regimes
-│   └── 04_classification_modeling.ipynb  # ExtraTrees for AQI risk prediction
-│
-├── datasets/                            # 📊 Processed data
-│   ├── dashboard_df.csv                  # Final integrated dataset (360 records)
-│   ├── weather_df.csv                    # Additional weather data
-│   └── air_quality_df.csv                # Additional air quality data
-│
-├── models/                               # 🤖 Trained machine learning models
-│   ├── weather_air_regime_cluster.pkl     # Original K-Means cluster model (notebook)
-│   ├── final_aqi_classifier.pkl           # Original ExtraTrees classifier (notebook)
-│   ├── weather_regime_cluster_v1.pkl      # Streamlit-optimized cluster model
-│   └── aqi_risk_classifier_v5.pkl         # Streamlit-optimized AQI classifier
-│
-├── figures/                              # 🖼️ Images for documentation
-│   ├── dashboard.png                      # Dashboard preview screenshot
-│   ├── silhoutte.png                      # Silhouette analysis plot
-│   ├── elbow.png                          # Elbow method plot
-│   ├── silhoutte_4.png                    # Silhouette plot for k=4
-│   └── image.jpg                          # Additional documentation image
-│
-├── .gitignore                            # Git ignore rules
-├── requirements.txt                       # Project-wide dependencies
-└── README.md                              # Project documentation
+| Directory/File | Description |
+|----------------|-------------|
+| **air_quality_analysis/** | Project root |
+| ├── **dashboard/** | Streamlit dashboard application |
+| │   ├── `air_quality.py` | Main app entry point |
+| │   ├── **pages/** | Multi-page dashboard sections |
+| │   │   ├── `1_overview.py` | Dataset preview & basic statistics |
+| │   │   ├── `2_insights.py` | City comparisons & AQI health guidelines |
+| │   │   ├── `3_monitoring.py` | Trends & correlations |
+| │   │   └── `4_predictions.py` | ML predictions |
+| │   ├── `train_cluster_model.py` | Weather regime clustering training script |
+| │   ├── `train_aqi_classifier.py` | AQI risk classifier training script |
+| │   ├── `requirements.txt` | Dashboard-specific dependencies |
+| │   └── `logo.png` | ECO 4N6 company logo |
+| ├── **notebooks/** | Jupyter notebooks for EDA & model development |
+| │   ├── `01_data_collection.ipynb` | API data fetching from Open-Meteo |
+| │   ├── `02_eda_visualization.ipynb` | Exploratory data analysis |
+| │   ├── `03_clustering_analysis.ipynb` | K-Means & PCA for weather regimes |
+| │   └── `04_classification_modeling.ipynb` | ExtraTrees for AQI risk prediction |
+| ├── **datasets/** | Processed data |
+| │   ├── `dashboard_df.csv` | Final integrated dataset (360 records) |
+| │   ├── `weather_df.csv` | Additional weather data |
+| │   └── `air_quality_df.csv` | Additional air quality data |
+| ├── **models/** | Trained machine learning models |
+| │   ├── `weather_air_regime_cluster.pkl` | Original K-Means cluster model |
+| │   ├── `final_aqi_classifier.pkl` | Original ExtraTrees classifier |
+| │   ├── `weather_regime_cluster_v1.pkl` | Streamlit-optimized cluster model |
+| │   └── `aqi_risk_classifier_v5.pkl` | Streamlit-optimized AQI classifier |
+| ├── **figures/** | Images for documentation |
+| │   ├── `dashboard.png` | Dashboard preview screenshot |
+| │   ├── `silhoutte.png` | Silhouette analysis plot |
+| │   ├── `elbow.png` | Elbow method plot |
+| │   ├── `silhoutte_4.png` | Silhouette plot for k=4 |
+| │   └── `image.jpg` | Additional documentation image |
+| ├── `.gitignore` | Git ignore rules |
+| ├── `requirements.txt` | Project-wide dependencies |
+| └── `README.md` | Project documentation |
 
 ## Credits
 
