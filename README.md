@@ -82,6 +82,7 @@ Data was collected using APIs from Open-Meteo website, processed in Jupyter note
 
 - Exploratory Data Analysis (EDA)
 - Feature engineering
+- Hyperparameter optimisation using GridSearchCV 
 - Principal Component Analysis (PCA)
 - K-Means clustering for weather regime detection
 - ExtraTrees multiclass classifier for AQI risk prediction
@@ -107,6 +108,8 @@ Data was collected using APIs from Open-Meteo website, processed in Jupyter note
    - PCA used to identify dominant patterns
 
 5. **Weather Regime Detection**
+   - Weather regime identification using K-Means clustering  
+   - Cluster validation using silhouette analysis  
    - K-Means clustering to classify pollution-weather regimes
 
 6. **AQI Risk Prediction**
@@ -115,6 +118,44 @@ Data was collected using APIs from Open-Meteo website, processed in Jupyter note
 7. **Deployment**
    - Interactive dashboard built using Streamlit
 
+## Air Quality Index (AQI) Multiclass Classifier
+An ExtraTreesClassifier was trained to predict AQI health risk categories based on pollutant and meteorological variables.
+
+### Hyperparameter Tuning
+Model performance was optimised using GridSearchCV with 2-fold cross-validation. The tuning process explored combinations of key parameters including: - n_estimators = 20 and to optimise the ExtraTrees classifier.
+
+### Model Performance
+
+| Metric | Score |
+|------|------|
+| Accuracy | 0.92 |
+| Precision | 0.90 |
+| Recall | 0.90 |
+| F1 Score | 0.90 |
+
+The model demonstrates strong predictive performance for AQI risk classification across multiple pollutant and meteorological variables.
+
+## Weather Regime Clustering Model
+K-Means clustering was used to identify dominant weather regimes. The optimal number of clusters was determined using the elbow method and silhouette analysis.
+
+## Weather Regime Clustering
+
+K-Means clustering was used to identify dominant weather regimes influencing air pollution behaviour.
+
+### Cluster Validation
+Multiple cluster sizes were evaluated using elbow method and silhouette analysis to assess cluster separation and cohesion.
+Elbow plot
+![Air Quality Dashboard](figures/elbow.png)
+
+| k | Observation |
+|---|---|
+| 2–3 | Insufficient granularity; distinct weather regimes were merged |
+| 4 | Majority of observations showed silhouette scores above the dataset average, indicating strong cluster separation |
+| 5–7 | Increased granularity but introduced thin or weakly populated clusters and slightly higher negative silhouette values |
+![Air Quality Dashboard](figures/silhoutte.png)
+
+**Selected k = 4** as the optimal configuration, balancing interpretability, cluster stability, and environmental regime differentiation.
+![Air Quality Dashboard](figures/silhoutte_4.png)
 ## Ethical Considerations
 
 **Data Attribution:** All meteorological and air quality data must be properly attributed to Open-Meteo under their CC BY 4.0 license, with clear disclosure of model limitations and uncertainties.
@@ -174,7 +215,6 @@ The app can be found at: https://arphaxad1985-air-quality-analysis-dashboardair-
 - joblib>=1.3.0
 - statsmodels>=0.14.0
 - jupyter nootbook
-
 
 ## AI Tools
 
