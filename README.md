@@ -1,5 +1,5 @@
 # Air Quality Analysis
-
+![Air Quality Dashboard Banner](figures/image.jpg)
 This project develops a data-driven air quality intelligence platform that analyses the relationship between meteorological conditions and urban air pollution.
 
 The project integrates exploratory data analysis (EDA), dimensionality reduction, unsupervised clustering, and supervised machine learning to understand and predict air quality risk.
@@ -13,7 +13,6 @@ Key objectives include:
 
 The system provides both **environmental analytics** and **predictive air quality monitoring**.
 
-![Air Quality Dashboard Banner](figures/image.jpg)
 ## Dataset Description
 
 This project analyzes integrated air quality and meteorological data across 6 major US cities (Los Angeles, Chicago, Cleveland, Detroit, Houston, Sacramento) over a 60-day winter period (December 2023 - January 2024). The dataset contains 360 total records (6 cities × 60 days) with 15 features including pollution metrics (PM2.5, PM10, AQI, ozone, NO₂, SO₂, CO, CO₂) and weather variables (temperature, humidity, precipitation, wind speed, pressure).
@@ -222,7 +221,6 @@ The app can be found at: https://arphaxad1985-air-quality-analysis-dashboardair-
 - Google Search with AI responses
 
 ## Repository Structure
-```text
 air_quality_analysis/
 │
 ├── dashboard/                          # 🎨 Streamlit dashboard application
@@ -243,22 +241,27 @@ air_quality_analysis/
 │   ├── 03_clustering_analysis.ipynb      # K-Means & PCA for weather regimes
 │   └── 04_classification_modeling.ipynb  # ExtraTrees for AQI risk prediction
 │
-├── datasets/                            #  Processed data
-│   └── dashboard_df.csv                  # Final integrated dataset (360 records)
+├── datasets/                            # 📊 Processed data
+│   ├── dashboard_df.csv                  # Final integrated dataset (360 records)
+│   ├── weather_df.csv                    # Additional weather data
+│   └── air_quality_df.csv                # Additional air quality data
 │
-├── models/                               #  Trained machine learning models
+├── models/                               # 🤖 Trained machine learning models
 │   ├── weather_air_regime_cluster.pkl     # Original K-Means cluster model (notebook)
 │   ├── final_aqi_classifier.pkl           # Original ExtraTrees classifier (notebook)
 │   ├── weather_regime_cluster_v1.pkl      # Streamlit-optimized cluster model
 │   └── aqi_risk_classifier_v5.pkl         # Streamlit-optimized AQI classifier
 │
-├── figures/                              #  Images for documentation
-│   └── dashboard.png                      # Dashboard preview screenshot
+├── figures/                              # 🖼️ Images for documentation
+│   ├── dashboard.png                      # Dashboard preview screenshot
+│   ├── silhoutte.png                      # Silhouette analysis plot
+│   ├── elbow.png                          # Elbow method plot
+│   ├── silhoutte_4.png                    # Silhouette plot for k=4
+│   └── image.jpg                          # Additional documentation image
 │
 ├── .gitignore                            # Git ignore rules
 ├── requirements.txt                       # Project-wide dependencies
 └── README.md                              # Project documentation
-```
 
 ## Credits
 
