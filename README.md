@@ -6,6 +6,9 @@ This project analyzes integrated air quality and meteorological data across 6 ma
 
 The dataset is well-suited for this analysis with a compact size of approximately 2MB (far below the 100GB repository limit), providing sufficient temporal depth for pattern identification while remaining computationally efficient. The winter timeframe captures cold weather pollution patterns, and the geographic diversity across different US regions enables comparative analysis of urban air quality under varying climatic and industrial conditions. Key features include daily measurements with no missing values, standardized units across all cities, and integration of both pollution and meteorological parameters for comprehensive environmental analysis.
 
+## Dashboard Preview
+![Air Quality Dashboard](figures/dashboard.png)
+
 ## Business Requirements
 
 This project analyzes air quality across six US cities to support regulatory compliance, public health protection, and urban planning. It enables stakeholders to monitor pollution levels, identify exceedances of WHO and EPA standards, and develop targeted interventions to reduce health risks and avoid regulatory penalties.
@@ -55,6 +58,50 @@ Data was collected using APIs from Open-Meteo website, processed in Jupyter note
 - **Scikit-Learn** was used for machine learning as it's a relatively easy-to-use library for machine learning tasks.
 - **Git** was used for version control.
 
+## Key Features
+
+- Identifies distinct **weather–pollution regimes** using clustering
+- Explains relationships between meteorology and air pollution
+- Predicts **AQI health risk categories**
+- Provides **interactive visualisations**
+- Deploys predictions through a **Streamlit dashboard**
+- Links pollution regimes to **WHO health risk thresholds**
+
+## Methods Used
+
+- Exploratory Data Analysis (EDA)
+- Feature engineering
+- Principal Component Analysis (PCA)
+- K-Means clustering for weather regime detection
+- ExtraTrees multiclass classifier for AQI risk prediction
+- Model evaluation and feature importance analysis
+- Interactive dashboard deployment using Streamlit
+
+## Data Science Pipeline
+
+1. **Data Collection**
+   - Meteorological and air quality data from multiple cities
+
+2. **Data Preprocessing**
+   - Cleaning missing values
+   - Feature scaling
+
+3. **Exploratory Data Analysis**
+   - Correlation analysis
+   - Pollution distribution patterns
+
+4. **Dimensionality Reduction**
+   - PCA used to identify dominant patterns
+
+5. **Weather Regime Detection**
+   - K-Means clustering to classify pollution-weather regimes
+
+6. **AQI Risk Prediction**
+   - ExtraTrees multiclass classifier predicting AQI health risk levels
+
+7. **Deployment**
+   - Interactive dashboard built using Streamlit
+
 ## Ethical Considerations
 
 **Data Attribution:** All meteorological and air quality data must be properly attributed to Open-Meteo under their CC BY 4.0 license, with clear disclosure of model limitations and uncertainties.
@@ -65,7 +112,7 @@ Data was collected using APIs from Open-Meteo website, processed in Jupyter note
 
 ## Dashboard Design
 
-**Main Page: Air Quality Dashboard**  
+**Home page: Air Quality Dashboard**  
 Has side panel with 4 tabs for all other pages. Main content includes tabs of the other pages.
 
 **Overview Page**  
@@ -75,16 +122,21 @@ Main content includes dataset preview, basic statistics, and fundamental visuali
 Has city comparisons, detailed analysis, and AQI health guidelines. Side panel has all pages tabs, filter settings for selecting city comparison by the metric.
 
 **Monitoring Page**  
-Has real-time trends, correlations, and city-level monitoring. Side panel
+In adition to a side pannel, this pages has the following button links that leads to the relevant views: 1. City explorer, 2. Trends, 3. City level monitoring,  4. Correlations (weather vs air variable by city), Correlation Heatmap.
 
 **Predictions Page**  
-Alongside side panel, has atmospheric regime analysis and AQI risk forecasting.
+Alongside side panel, a Machine Learning Models page that divides further into atmospheric regime analysis and AQI risk forecasting via button links.
 
-## Unfixed Bugs
+## Fixed Bugs
 
-1. **Streamlit deployment challenge** with tracking files while online. First page shows loaded dataframe but prediction page gives error of having wrong dataframe with just 2 features.
+| Bug | Resolution |
+|-----|------------|
+| **Streamlit page loading errors due to file and model path issues** | Fixed dataset and model loading paths across all pages using `Path(__file__).parent.parent.parent` for consistent file resolution. Resolved "FileNotFoundError" and model loading failures in deployed environment. |
+| **Prediction page showing wrong dataframe with only 2 features** | Corrected feature names in training script to match actual dataset columns (`pm2_5`, `pm10`, `ozone`, `nitrogen_dioxide`, `sulphur_dioxide`). Retrained model to v5 with proper feature mapping. |
+| **Cluster misclassification** | Implemented distance-based correction using actual cluster centers from training data. Added logic to reassign moderate pollution values from Cluster 3 to appropriate clusters based on temperature and pollutant levels. |
+| **Missing "Unhealthy" predictions** | Added EPA-aligned manual override (PM2.5 > 55.5 triggers 🔴 Unhealthy) since dataset contains no AQI >150 samples. Model now correctly warns for extreme pollution events. |
+| **Model versioning confusion** | Cleaned up models folder to keep only essential files: original notebook models (`final_aqi_classifier.pkl`, `weather_air_regime_cluster.pkl`) and Streamlit-optimized versions (`weather_regime_cluster_v1.pkl`, `aqi_risk_classifier_v5.pkl`). |
 
-2. **Streamlit: mapping clusters and risk scores** during the training of models that would handle the streamlit app. Coupled with the fact that prediction would have to be with the input of few significant features.
 
 ## Development Roadmap
 
