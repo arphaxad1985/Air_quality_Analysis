@@ -1,13 +1,24 @@
 # Air Quality Analysis
+
+This project develops a data-driven air quality intelligence platform that analyses the relationship between meteorological conditions and urban air pollution.
+
+The project integrates exploratory data analysis (EDA), dimensionality reduction, unsupervised clustering, and supervised machine learning to understand and predict air quality risk.
+
+Key objectives include:
+
+• Identifying dominant weather regimes using PCA and K-Means clustering  
+• Analysing relationships between meteorological variables and pollutant concentrations  
+• Predicting air quality risk levels using an ExtraTrees multiclass classifier  
+• Deploying insights through an interactive Streamlit dashboard
+
+The system provides both **environmental analytics** and **predictive air quality monitoring**.
+
 ![Air Quality Dashboard Banner](figures/image.jpg)
 ## Dataset Description
 
 This project analyzes integrated air quality and meteorological data across 6 major US cities (Los Angeles, Chicago, Cleveland, Detroit, Houston, Sacramento) over a 60-day winter period (December 2023 - January 2024). The dataset contains 360 total records (6 cities × 60 days) with 15 features including pollution metrics (PM2.5, PM10, AQI, ozone, NO₂, SO₂, CO, CO₂) and weather variables (temperature, humidity, precipitation, wind speed, pressure).
 
 The dataset is well-suited for this analysis with a compact size of approximately 2MB (far below the 100GB repository limit), providing sufficient temporal depth for pattern identification while remaining computationally efficient. The winter timeframe captures cold weather pollution patterns, and the geographic diversity across different US regions enables comparative analysis of urban air quality under varying climatic and industrial conditions. Key features include daily measurements with no missing values, standardized units across all cities, and integration of both pollution and meteorological parameters for comprehensive environmental analysis.
-
-## Dashboard Preview
-![Air Quality Dashboard](figures/dashboard.png)
 
 ## Business Requirements
 
@@ -85,6 +96,8 @@ Data was collected using APIs from Open-Meteo website, processed in Jupyter note
 2. **Data Preprocessing**
    - Cleaning missing values
    - Feature scaling
+   - Missing value handling
+   - Variable selection
 
 3. **Exploratory Data Analysis**
    - Correlation analysis
@@ -111,7 +124,8 @@ Data was collected using APIs from Open-Meteo website, processed in Jupyter note
 **Algorithmic Fairness:** Geographic biases in data resolution must be acknowledged, ensuring transparency about varying accuracy across regions and avoiding stigmatization of specific communities.
 
 ## Dashboard Design
-
+## Dashboard Preview
+![Air Quality Dashboard](figures/dashboard.png)
 **Home page: Air Quality Dashboard**  
 Has side panel with 4 tabs for all other pages. Main content includes tabs of the other pages.
 
@@ -126,6 +140,7 @@ In adition to a side pannel, this pages has the following button links that lead
 
 **Predictions Page**  
 Alongside side panel, a Machine Learning Models page that divides further into atmospheric regime analysis and AQI risk forecasting via button links.
+
 
 ## Fixed Bugs
 
@@ -161,6 +176,45 @@ The app can be found at: https://arphaxad1985-air-quality-analysis-dashboardair-
 
 - Co-Pilot
 - Google Search with AI responses
+
+## Repository Structure
+```text
+air_quality_analysis/
+│
+├── dashboard/                          # 🎨 Streamlit dashboard application
+│   ├── air_quality.py                   # Main app entry point
+│   ├── pages/                            # Multi-page dashboard sections
+│   │   ├── 1_overview.py                 # Dataset preview & basic statistics
+│   │   ├── 2_insights.py                 # City comparisons & AQI health guidelines
+│   │   ├── 3_monitoring.py                # Trends & correlations
+│   │   └── 4_predictions.py               # ML predictions (weather regimes & AQI risk)
+│   ├── train_cluster_model.py             # Weather regime clustering training script
+│   ├── train_aqi_classifier.py            # AQI risk classifier training script
+│   ├── requirements.txt                   # Dashboard-specific dependencies
+│   └── logo.png                           # ECO 4N6 company logo
+│
+├── notebooks/                           # 📓 Jupyter notebooks for EDA & model development
+│   ├── 01_data_collection.ipynb          # API data fetching from Open-Meteo
+│   ├── 02_eda_visualization.ipynb        # Exploratory data analysis
+│   ├── 03_clustering_analysis.ipynb      # K-Means & PCA for weather regimes
+│   └── 04_classification_modeling.ipynb  # ExtraTrees for AQI risk prediction
+│
+├── datasets/                            # 📊 Processed data
+│   └── dashboard_df.csv                  # Final integrated dataset (360 records, 18 features)
+│
+├── models/                               # 🧠 Trained machine learning models
+│   ├── weather_air_regime_cluster.pkl     # Original K-Means cluster model (notebook)
+│   ├── final_aqi_classifier.pkl           # Original ExtraTrees classifier (notebook)
+│   ├── weather_regime_cluster_v1.pkl      # Streamlit-optimized cluster model
+│   └── aqi_risk_classifier_v5.pkl         # Streamlit-optimized AQI classifier (inclusive Good)
+│
+├── figures/                              # 🖼️ Images for documentation
+│   └── dashboard.png                      # Dashboard preview screenshot
+│
+├── .gitignore                            # Git ignore rules
+├── requirements.txt                       # Project-wide dependencies
+└── README.md                              # Project documentation
+```
 
 ## Credits
 
