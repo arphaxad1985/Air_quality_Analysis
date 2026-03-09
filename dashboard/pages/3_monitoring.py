@@ -62,10 +62,83 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Hide automatic page navigation by streamlit
+st.markdown("""
+<style>
+    /* Hide the entire page navigation section */
+    [data-testid="stSidebarNav"] {
+        display: none !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --------------------------------
+# SIDEBAR - WITH BUTTONS AND LOGO AT BOTTOM
+# --------------------------------
+with st.sidebar:
+    st.markdown("###  Exploring: ..📊 Monitoring")
+    
+    
+    if st.button("🏠 Home", use_container_width=True):
+        st.switch_page("air_quality.py")
+    
+    if st.button("📊 Overview", use_container_width=True):
+        st.switch_page("pages/1_overview.py")
+    
+    if st.button("🔎 Insights", use_container_width=True):
+        st.switch_page("pages/2_insights.py")
+    
+    if st.button("📈 Monitoring", use_container_width=True):
+        st.switch_page("pages/3_monitoring.py")
+    
+    if st.button("🔮 Predictions", use_container_width=True):
+        st.switch_page("pages/4_predictions.py")
+    
+    # This pushes everything below down
+    st.markdown("<br>" * 1, unsafe_allow_html=True)
+    
+    # --------------------------------
+    # ROBUST LOGO LOADING - MOVED INSIDE SIDEBAR
+    # --------------------------------
+    
+    import os
+    from pathlib import Path
+    from PIL import Image
+    import datetime
+    
+    # Construct the path
+    logo_path = Path(__file__).parent.parent / "logo.png"
+    
+    if logo_path.exists():
+        try:
+            logo = Image.open(logo_path)
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                st.image(logo, width=150)
+                st.markdown(f"""
+                <div style='text-align: center; margin-top: 5px;'>
+                    <span style='color: #E0FFFF; font-size: 0.7rem;'>
+                        ⚖️ © {datetime.datetime.now().year} ECO 4N6 Limited
+                    </span>
+                </div>
+                """, unsafe_allow_html=True)
+        except Exception as e:
+            st.markdown("**ECO4N6**")
+            st.caption(f"⚖️ © {datetime.datetime.now().year}")
+    else:
+        st.markdown(f"""
+        <div style='text-align: center; padding: 10px;'>
+            <div style='font-size: 1.2rem; font-weight: bold; color: #E0FFFF;'>ECO4N6</div>
+            <div style='font-size: 0.8rem; font-style: italic; color: #FFE4E1;'>Pioneering Sustainable<br>Forensic Techniques</div>
+            <div style='font-size: 0.7rem; color: #FFE4E1; margin-top: 5px;'>⚖️ © {datetime.datetime.now().year}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+
 # --------------------------------
 # Header
 # --------------------------------
-st.markdown('<div class="main-header">🌫️ Air Quality & Weather Analysis Dashboard</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">💨 Air Quality & Weather Analysis Dashboard🌫️</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
     unsafe_allow_html=True
@@ -77,7 +150,7 @@ st.markdown(
 st.markdown("---")
 
 st.title("📈 Monitoring")
-st.markdown("Real-time trends, correlations, and city-level monitoring")
+st.markdown("**This dashboard page covers:**  1. City Details Exploration, 2. Real-time trends, 3. City-level monitoring, and  4.Correlations")
 
 # This works everywhere (local AND cloud)
 data_path = Path(__file__).parent.parent.parent / "datasets" / "dashboard_df.csv"
@@ -98,11 +171,11 @@ if 'Value' in df.columns:
     df['Value'] = pd.to_numeric(df['Value'], errors='coerce')
     
 # Create tabs for different monitoring views
-tab1, tab2, tab3, tab4 = st.tabs([" City Explorer", "📈 Trends", "🏙️ City Comparison", " Correlations"])
+tab1, tab2, tab3, tab4 = st.tabs([" 🌆 1. City Explorer", "📈 2. Trends", "🏙️ 3. City Level Monitoring", " 📐 4. Correlations"])
 
 with tab1:
     # City Details Explorer
-    st.header(" City Details Explorer")
+    st.header(" 🌆 1. City Details Explorer")
     
     col1, col2 = st.columns([1, 3])
     
@@ -142,7 +215,7 @@ with tab1:
 
 with tab2:
     # Trends
-    st.header("📈 Trends Analysis")
+    st.header("📈 2. Trends Analysis")
     
     # Multi-city time series
     selected_cities_trend = st.multiselect(
@@ -180,7 +253,7 @@ with tab2:
 
 with tab3:
     # City Comparison
-    st.header("🏙️ Multi-City Comparison")
+    st.header("🏙️ 3. City Level Monitoring")
     
     col1, col2 = st.columns(2)
     
@@ -213,7 +286,7 @@ with tab3:
 
 with tab4:
     # Correlations
-    st.header("🌡️ Correlations Analysis")
+    st.header("📐 4. Correlations Analysis")
     
     # Select variables for correlation
     numeric_cols = [col for col in df.select_dtypes(include=['float64', 'int64']).columns 

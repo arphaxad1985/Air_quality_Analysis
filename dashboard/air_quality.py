@@ -227,7 +227,7 @@ st.markdown("""
 # SIDEBAR - WITH BUTTONS AND LOGO AT BOTTOM
 # --------------------------------
 with st.sidebar:
-    st.markdown("###  Explore Dashboard")
+    st.markdown("###  Exploring: .. 🏠Home")
     st.markdown("---")
     
     # Sidebar navigation buttons (these will appear at the top)
@@ -293,7 +293,7 @@ with st.sidebar:
 # --------------------------------
 # Header
 # --------------------------------
-st.markdown('<div class="main-header">🌫️ Air Quality & Weather Analysis Dashboard</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">💨 Air Quality & Weather Analysis Dashboard🌫️</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
     unsafe_allow_html=True

@@ -24,14 +24,14 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.1);
         padding: 10px;
         border-radius: 10px;
-        
+    }
     [data-testid="stSidebar"] {
         background: linear-gradient(135deg, #85bb65 0%, #2e7d32 100%);
         backdrop-filter: blur(10px);
         border-right: 2px solid rgba(255, 255, 255, 0.2);
     }
     
-    /* Optional: Make sidebar text white for better contrast */
+    /* Make sidebar text white for better contrast */
     [data-testid="stSidebar"] .stMarkdown, 
     [data-testid="stSidebar"] .stSelectbox label,
     [data-testid="stSidebar"] .stMultiSelect label {
@@ -61,10 +61,20 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Hide automatic page navigation by streamlit
+st.markdown("""
+<style>
+    /* Hide the entire page navigation section */
+    [data-testid="stSidebarNav"] {
+        display: none !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # --------------------------------
-# Header
+# HEADER
 # --------------------------------
-st.markdown('<div class="main-header">🌫️ Air Quality & Weather Analysis Dashboard</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">💨 Air Quality & Weather Analysis Dashboard🌫️</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
     unsafe_allow_html=True
@@ -73,12 +83,11 @@ st.markdown(
     '<div style="text-align: center; color: black; font-size: 0.9rem; margin-top: -10px; margin-bottom: 10px;">⚖️ © ECO 4N6 Limited. All rights reserved. 🌱</div>',
     unsafe_allow_html=True
 )
-st.markdown("---")
 
-st.title(" 🔎Insights")
-st.markdown("City comparisons, detailed analysis, and AQI health guidelines")
+st.title(" 🔎 Insights")
+st.markdown("**This dashboard page covers:**  1.City by city comparisons against various polution metrics:  2. Detailed city statistics and 3. AQI Information and health guidelines")
 
-# This works everywhere (local AND cloud)
+# Load data
 data_path = Path(__file__).parent.parent.parent / "datasets" / "dashboard_df.csv"
 
 @st.cache_data
@@ -87,11 +96,32 @@ def load_data():
 
 df = load_data()
 
-# Sidebar for city selection
+# --------------------------------
+# SIDEBAR - SINGLE SIDEBAR WITH ALL ELEMENTS
+# --------------------------------
 with st.sidebar:
+    # === SECTION 1: NAVIGATION BUTTONS (TOP) ===
+    st.markdown("###  Exploring: .. 🔎 Insights")
+    
+    if st.button("🏠 Home", use_container_width=True):
+        st.switch_page("air_quality.py")
+    
+    if st.button("📊 Overview", use_container_width=True):
+        st.switch_page("pages/1_overview.py")
+    
+    if st.button("🔎 Insights", use_container_width=True):
+        st.switch_page("pages/2_insights.py")
+    
+    if st.button("📈 Monitoring", use_container_width=True):
+        st.switch_page("pages/3_monitoring.py")
+    
+    if st.button("🔮 Predictions", use_container_width=True):
+        st.switch_page("pages/4_predictions.py")
+    
+    
+    # === SECTION 2: FILTER SETTINGS (MIDDLE) ===
     st.header(" Filter Settings")
     
-    # City selector
     all_cities = sorted(df['city'].unique())
     selected_cities = st.multiselect(
         "Select Cities for Comparison",
@@ -99,15 +129,50 @@ with st.sidebar:
         default=all_cities[:3] if len(all_cities) > 3 else all_cities
     )
     
-    # Metric selector
     metric = st.selectbox(
         "Select Metric for Comparison",
         ["us_aqi", "pm2_5", "temperature_2m", "humidity", "wind_speed"],
         format_func=lambda x: x.replace('_', ' ').title()
     )
     
-    st.markdown("---")
-    st.info("Use the filters to customize the comparison view below.")
+
+    st.info("Use filters above to customize comparison views.")
+    
+    # === SECTION 3: LOGO AT BOTTOM ===
+    # Push logo to bottom with spacer
+    st.markdown("<br>" * 0, unsafe_allow_html=True)
+    
+    import os
+    from pathlib import Path
+    from PIL import Image
+    import datetime
+    
+    logo_path = Path(__file__).parent.parent / "logo.png"
+    
+    if logo_path.exists():
+        try:
+            logo = Image.open(logo_path)
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                st.image(logo, width=150)
+                st.markdown(f"""
+                <div style='text-align: center; margin-top: 5px;'>
+                    <span style='color: #E0FFFF; font-size: 0.7rem;'>
+                        ⚖️ © {datetime.datetime.now().year} ECO 4N6 Limited
+                    </span>
+                </div>
+                """, unsafe_allow_html=True)
+        except Exception as e:
+            st.markdown("**ECO4N6**")
+            st.caption(f"⚖️ © {datetime.datetime.now().year}")
+    else:
+        st.markdown(f"""
+        <div style='text-align: center; padding: 10px;'>
+            <div style='font-size: 1.2rem; font-weight: bold; color: #E0FFFF;'>ECO4N6</div>
+            <div style='font-size: 0.8rem; font-style: italic; color: #FFE4E1;'>Pioneering Sustainable<br>Forensic Techniques</div>
+            <div style='font-size: 0.7rem; color: #FFE4E1; margin-top: 5px;'>⚖️ © {datetime.datetime.now().year}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Calculate city statistics
 if selected_cities:
@@ -120,8 +185,8 @@ city_stats = filtered_df.groupby("city").agg({
     "us_aqi": ["mean", "min", "max", "std"],
     "pm2_5": "mean",
     "temperature_2m": "mean",
-    "relative_humidity_2m": "mean",  # Correct column name
-    "wind_speed_10m": "mean"          # Correct column name
+    "relative_humidity_2m": "mean",
+    "wind_speed_10m": "mean"
 }).round(2)
 
 city_stats.columns = ['_'.join(col).strip() for col in city_stats.columns.values]
@@ -129,7 +194,8 @@ city_stats = city_stats.reset_index()
 city_stats = city_stats.sort_values("us_aqi_mean", ascending=False)
 
 # City Comparison Dashboard
-st.header("🏙️ City Comparison Dashboard")
+st.header("🏙️ 1. City Comparison Dashboard")
+st.markdown("**⏪ Use filter settings on the side pannel for customized city comparisons against polution metrics..⏪**")
 
 # Create comparison chart based on selected metric
 fig = go.Figure()
@@ -151,12 +217,12 @@ elif metric == "temperature_2m":
     title_metric = "Temperature"
     
 elif metric == "humidity":
-    y_values = city_stats['relative_humidity_2m_mean']  # Using correct column
+    y_values = city_stats['relative_humidity_2m_mean']
     y_label = "Average Humidity (%)"
     title_metric = "Humidity"
     
 elif metric == "wind_speed":
-    y_values = city_stats['wind_speed_10m_mean']  # Using correct column
+    y_values = city_stats['wind_speed_10m_mean']
     y_label = "Average Wind Speed (km/h)"
     title_metric = "Wind Speed"
 
@@ -166,13 +232,13 @@ for idx, row in city_stats.iterrows():
     # Color coding based on AQI only if showing AQI
     if metric == "us_aqi":
         if value <= 50:
-            color = '#2ECC71'  # Green
+            color = '#2ECC71'
         elif value <= 100:
-            color = '#F39C12'  # Orange
+            color = '#F39C12'
         elif value <= 150:
-            color = '#E74C3C'  # Red
+            color = '#E74C3C'
         else:
-            color = '#8B0000'  # Dark Red
+            color = '#8B0000'
     else:
         # Use a blue gradient for non-AQI metrics
         color = px.colors.sequential.Blues[3 + (idx % 5)]
@@ -215,8 +281,26 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
+st.markdown("---")
+st.markdown("**Please scroll down for more details.**")
+st.markdown("""
+<style>
+@keyframes bounce {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(10px);}
+}
+.bounce-arrow {
+    animation: bounce 1.5s infinite;
+    text-align: center;
+    font-size: 2rem;
+    color: #888;
+}
+</style>
+<div class='bounce-arrow'>⬇️</div>
+""", unsafe_allow_html=True)
+
 # Detailed City Statistics
-st.header(" Detailed City Statistics")
+st.header(" 📌 2. Detailed City Statistics")
 
 # Create formatted table
 display_df = city_stats.copy()
@@ -259,7 +343,8 @@ st.download_button(
 
 # AQI Information Panel
 st.markdown("---")
-st.header(" AQI Information & Health Guidelines")
+st.header(" 🌬️🫁 Air Quality Index (AQI) Information & Health Guidelines 🩺")
+
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -295,7 +380,7 @@ with col4:
     **Action:** Avoid outdoor activities
     """)
 
-st.markdown("---")
+
 st.markdown("""
 <div style="
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
@@ -309,7 +394,7 @@ st.markdown("""
         ⚠️ HEALTH & SAFETY INFORMATION ⚠️
     </h4>
     <div style="display: flex; align-items: center; gap: 20px;">
-        <div style="font-size: 3rem; background: rgba(79, 195, 247, 0.2); padding: 15px; border-radius: 50%;">🌫️</div>
+        <div style="font-size: 3rem; background: rgba(79, 195, 247, 0.2); padding: 15px; border-radius: 50%;">🏥</div>
         <div style="flex: 1;">
             <p style="color: white; font-size: 1.1rem; margin: 5px 0;">
                 <strong>🔴 AQI > 200:</strong> <span style="background: #ff4d4d; color: white; padding: 3px 10px; border-radius: 20px;">Very Unhealthy</span>

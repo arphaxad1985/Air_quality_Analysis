@@ -60,10 +60,82 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Hide automatic page navigation by streamlit
+st.markdown("""
+<style>
+    /* Hide the entire page navigation section */
+    [data-testid="stSidebarNav"] {
+        display: none !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --------------------------------
+# SIDEBAR - WITH BUTTONS AND LOGO AT BOTTOM
+# --------------------------------
+with st.sidebar:
+    st.markdown("###  Exploring: ..📊 Overview")
+    
+    
+    if st.button("🏠 Home", use_container_width=True):
+        st.switch_page("air_quality.py")
+    
+    if st.button("📊 Overview", use_container_width=True):
+        st.switch_page("pages/1_overview.py")
+    
+    if st.button("🔎 Insights", use_container_width=True):
+        st.switch_page("pages/2_insights.py")
+    
+    if st.button("📈 Monitoring", use_container_width=True):
+        st.switch_page("pages/3_monitoring.py")
+    
+    if st.button("🔮 Predictions", use_container_width=True):
+        st.switch_page("pages/4_predictions.py")
+    
+    # This pushes everything below down
+    st.markdown("<br>" * 1, unsafe_allow_html=True)
+    
+    # --------------------------------
+    # ROBUST LOGO LOADING - MOVED INSIDE SIDEBAR
+    # --------------------------------
+    
+    import os
+    from pathlib import Path
+    from PIL import Image
+    import datetime
+    
+    # Construct the path
+    logo_path = Path(__file__).parent.parent / "logo.png"
+    
+    if logo_path.exists():
+        try:
+            logo = Image.open(logo_path)
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                st.image(logo, width=150)
+                st.markdown(f"""
+                <div style='text-align: center; margin-top: 5px;'>
+                    <span style='color: #E0FFFF; font-size: 0.7rem;'>
+                        ⚖️ © {datetime.datetime.now().year} ECO 4N6 Limited
+                    </span>
+                </div>
+                """, unsafe_allow_html=True)
+        except Exception as e:
+            st.markdown("**ECO4N6**")
+            st.caption(f"⚖️ © {datetime.datetime.now().year}")
+    else:
+        st.markdown(f"""
+        <div style='text-align: center; padding: 10px;'>
+            <div style='font-size: 1.2rem; font-weight: bold; color: #E0FFFF;'>ECO4N6</div>
+            <div style='font-size: 0.8rem; font-style: italic; color: #FFE4E1;'>Pioneering Sustainable<br>Forensic Techniques</div>
+            <div style='font-size: 0.7rem; color: #FFE4E1; margin-top: 5px;'>⚖️ © {datetime.datetime.now().year}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
 # --------------------------------
 # Header
 # --------------------------------
-st.markdown('<div class="main-header">🌫️ Air Quality & Weather Analysis Dashboard</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header"> 💨 Air Quality & Weather Analysis Dashboard 🌫️ </div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
     unsafe_allow_html=True
@@ -75,7 +147,22 @@ st.markdown(
 st.markdown("---")
 
 st.title(" 📊 The Overview")
-st.markdown("**Please scroll down for:** 1.Dataset preview, 2 Basic statistics, and 3.Fundamental visualizations")
+st.markdown("**This Dashboard page covers:** (1.Dataset preview, 2.Basic statistics, and 3.Fundamental visualizations.) **Please scroll down for more details:**")
+st.markdown("""
+<style>
+@keyframes bounce {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(10px);}
+}
+.bounce-arrow {
+    animation: bounce 1.5s infinite;
+    text-align: center;
+    font-size: 2rem;
+    color: #888;
+}
+</style>
+<div class='bounce-arrow'>⬇️</div>
+""", unsafe_allow_html=True)
 
 # This works everywhere (local AND cloud)
 data_path = Path(__file__).parent.parent.parent / "datasets" / "dashboard_df.csv"
@@ -87,16 +174,16 @@ def load_data():
 df = load_data()
 
 # Dataset Preview
-st.header("1.Dataset Preview")
+st.header("📂 1. Dataset Preview")
 with st.expander("View Full Dataset", expanded=False):
     st.dataframe(df, use_container_width=True)
     
 # Basic Statistics
-st.header("2.Basic Statistics")
+st.header("🔢 2. Basic Statistics")
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.subheader("Quick Stats")
+    st.subheader("⚡ Quick Stats:...⌛")
     stats_data = {
         "Metric": ["Total Records", "Cities", "Date Range", "Avg AQI", "Avg Temp", "Avg PM2.5"],
         "Value": [
@@ -111,14 +198,33 @@ with col1:
     st.table(pd.DataFrame(stats_data))
 
 with col2:
-    st.subheader("Numerical Summary")
+    st.subheader("📑..Numerical Summary...📏")
     st.dataframe(df.describe(), use_container_width=True)
 
+st.markdown("---")
+st.markdown("**Please scroll down for more details.**")
+st.markdown("""
+<style>
+@keyframes bounce {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(10px);}
+}
+.bounce-arrow {
+    animation: bounce 1.5s infinite;
+    text-align: center;
+    font-size: 2rem;
+    color: #888;
+}
+</style>
+<div class='bounce-arrow'>⬇️</div>
+""", unsafe_allow_html=True)
+
+
 # Basic Visualizations
-st.header("3.Basic Visualizations")
+st.header("🎨 3.Basic Visualizations")
 
 # AQI Distribution
-st.subheader("Average Air Quality Index (AQI) by City")
+st.subheader("🌬️ Average Air Quality Index (AQI) by City")
 city_aqi_mean = df.groupby("city")["us_aqi"].mean().sort_values(ascending=False)
 
 # Create plot with matplotlib
@@ -151,7 +257,7 @@ st.pyplot(fig)
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("AQI Distribution")
+    st.subheader("💨 AQI Distribution")
     fig2, ax2 = plt.subplots(figsize=(8, 4))
     ax2.hist(df['us_aqi'], bins=30, color='skyblue', edgecolor='black', alpha=0.7)
     ax2.set_xlabel('US AQI')
@@ -163,7 +269,7 @@ with col1:
     st.pyplot(fig2)
 
 with col2:
-    st.subheader("Temperature vs AQI")
+    st.subheader("🌡️ Temperature vs AQI 💨")
     fig3, ax3 = plt.subplots(figsize=(8, 4))
     scatter = ax3.scatter(df['temperature_2m'], df['us_aqi'], 
                          c=df['us_aqi'], cmap='RdYlGn_r', alpha=0.6, s=20)

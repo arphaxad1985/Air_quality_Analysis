@@ -65,10 +65,78 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Hide automatic page navigation by streamlit
+st.markdown("""
+<style>
+    /* Hide the entire page navigation section */
+    [data-testid="stSidebarNav"] {
+        display: none !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --------------------------------
+# SIDEBAR - SINGLE SIDEBAR WITH ALL ELEMENTS
+# --------------------------------
+with st.sidebar:
+    # === SECTION 1: NAVIGATION BUTTONS (TOP) ===
+    st.markdown("###  Exploring: .. 🔮 Predictions")
+    
+    if st.button("🏠 Home", use_container_width=True):
+        st.switch_page("air_quality.py")
+    
+    if st.button("📊 Overview", use_container_width=True):
+        st.switch_page("pages/1_overview.py")
+    
+    if st.button("🔎 Insights", use_container_width=True):
+        st.switch_page("pages/2_insights.py")
+    
+    if st.button("📈 Monitoring", use_container_width=True):
+        st.switch_page("pages/3_monitoring.py")
+    
+    if st.button("🔮 Predictions", use_container_width=True):
+        st.switch_page("pages/4_predictions.py")
+ 
+    # === SECTION 3: LOGO AT BOTTOM ===
+    # Push logo to bottom with spacer
+    st.markdown("<br>" * 0, unsafe_allow_html=True)
+    
+    import os
+    from pathlib import Path
+    from PIL import Image
+    import datetime
+    
+    logo_path = Path(__file__).parent.parent / "logo.png"
+    
+    if logo_path.exists():
+        try:
+            logo = Image.open(logo_path)
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                st.image(logo, width=150)
+                st.markdown(f"""
+                <div style='text-align: center; margin-top: 5px;'>
+                    <span style='color: #E0FFFF; font-size: 0.7rem;'>
+                        ⚖️ © {datetime.datetime.now().year} ECO 4N6 Limited
+                    </span>
+                </div>
+                """, unsafe_allow_html=True)
+        except Exception as e:
+            st.markdown("**ECO4N6**")
+            st.caption(f"⚖️ © {datetime.datetime.now().year}")
+    else:
+        st.markdown(f"""
+        <div style='text-align: center; padding: 10px;'>
+            <div style='font-size: 1.2rem; font-weight: bold; color: #E0FFFF;'>ECO4N6</div>
+            <div style='font-size: 0.8rem; font-style: italic; color: #FFE4E1;'>Pioneering Sustainable<br>Forensic Techniques</div>
+            <div style='font-size: 0.7rem; color: #FFE4E1; margin-top: 5px;'>⚖️ © {datetime.datetime.now().year}</div>
+        </div>
+        """, unsafe_allow_html=True) 
+      
 # --------------------------------
 # Header
 # --------------------------------
-st.markdown('<div class="main-header">🌫️ Air Quality & Weather Analysis Dashboard</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">💨 Air Quality & Weather Analysis Dashboard🌫️</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="sub-header">Analysing the influence of weather conditions on air pollution levels</div>',
     unsafe_allow_html=True
@@ -82,7 +150,7 @@ st.markdown("---")
 # Title
 st.title("🔮 Machine Learning Models")
 
-st.markdown("**About Predictions** — This app applies both unsupervised models (K-Means and PCA) and supervised learning model (ExtraTrees classifier) for clustering weather regimes and Multiclass classification of AQI Risk respectively.")
+st.markdown("**🧠 About Predictions:**  This  **app** applies both unsupervised models (🔄 **K-Means and PCA** ) and supervised learning model ( 🌲🌲 **ExtraTrees classifier**) for clustering weather regimes and Multiclass classification of AQI Risk respectively.")
 
 # Load models from central location (works everywhere)
 @st.cache_resource
@@ -104,20 +172,22 @@ def load_models():
         st.sidebar.error(f"❌ Cluster model not found at {cluster_path}")
     
     # Load AQI model (new 5-feature version)
-    aqi_path = models_dir / "aqi_risk_classifier_v1.pkl"
+    aqi_path = models_dir / "aqi_risk_classifier_v5.pkl" # Changed from v1 to v5
     if aqi_path.exists():
         try:
             models['aqi'] = joblib.load(aqi_path)
-            st.sidebar.success("✓ AQI 5-feature model loaded")
+            st.sidebar.success("✓ AQI 5-feature model loaded (v5)")
         except Exception as e:
             st.sidebar.warning(f"⚠️ AQI model not loaded: {e}")
     else:
-        st.sidebar.info("ℹ️ AQI model not found")
+        st.sidebar.info("ℹ️ AQI model v5 not found")
+
     
     return models
 
 # CALL THE FUNCTION
 models = load_models()
+
 
 # Check if models are available
 if not models:
@@ -133,7 +203,7 @@ tab1, tab2 = st.tabs(["🌪️ Weather Regime Clustering", "🌫️ AQI Risk Pre
 with tab1:
     st.header("🌪️ Weather-Air Pollution Regime Clustering")
     st.markdown("""
-**Predict weather-air pollution regimes based on current conditions** — K-Means combined with PCA clustering identifies 4 distinct weather-pollution patterns using ozone, NO₂, SO₂, temperature & PM2.5.
+**⚙️ Predict weather-air pollution regimes based on current conditions:** 🌀 K-Means combined with PCA clustering identifies 4 distinct weather-pollution patterns using ozone, NO₂, SO₂, temperature & PM2.5.
 """)
     
     if 'cluster' not in models:
@@ -238,12 +308,51 @@ with tab1:
         
         # Predict button
         if st.button("🔮 Predict Weather Regime", use_container_width=True):
-            input_df = pd.DataFrame([inputs])
-            input_df = input_df[features]
-            
             try:
+                input_df = pd.DataFrame([inputs])
+                input_df = input_df[features]
+                
                 cluster_id = pipeline.predict(input_df)[0]
                 regime_name = regime_labels.get(str(cluster_id), regime_labels.get(int(cluster_id), f"Regime {cluster_id}"))
+                
+                # ===== CLUSTER CORRECTION BASED ON TRAINING DATA =====
+                # Get input values
+                no2 = inputs.get('nitrogen_dioxide', 0)
+                pm25 = inputs.get('pm2_5', 0)
+                ozone = inputs.get('ozone', 0)
+                so2 = inputs.get('sulphur_dioxide', 0)
+                temp = inputs.get('temperature_2m', 0)
+                
+                # Calculate distance to each cluster center (from training output)
+                # Cluster 0 means: [34.75, 28.31, 6.07, 8.46, 12.43]
+                dist0 = abs(ozone - 34.75) + abs(no2 - 28.31) + abs(so2 - 6.07) + abs(temp - 8.46) + abs(pm25 - 12.43)
+                
+                # Cluster 1 means: [59.77, 12.46, 3.20, -1.46, 5.93]
+                dist1 = abs(ozone - 59.77) + abs(no2 - 12.46) + abs(so2 - 3.20) + abs(temp + 1.46) + abs(pm25 - 5.93)
+                
+                # Cluster 2 means: [76.19, 5.51, 1.24, 17.51, 4.66]
+                dist2 = abs(ozone - 76.19) + abs(no2 - 5.51) + abs(so2 - 1.24) + abs(temp - 17.51) + abs(pm25 - 4.66)
+                
+                # Cluster 3 means: [13.96, 60.89, 15.42, 15.31, 31.09]
+                dist3 = abs(ozone - 13.96) + abs(no2 - 60.89) + abs(so2 - 15.42) + abs(temp - 15.31) + abs(pm25 - 31.09)
+                
+                # Find the closest cluster
+                distances = [dist0, dist1, dist2, dist3]
+                min_dist = min(distances)
+                best_cluster = distances.index(min_dist)
+                
+                # If model predicted 3 but values are closer to another cluster
+                if cluster_id == 3 and best_cluster != 3 and min_dist < dist3 * 0.8:
+                    st.info(f"🔄 Reclassified from Cluster 3 to Cluster {best_cluster} (better match based on training data)")
+                    cluster_id = best_cluster
+                    # Update regime name
+                    if best_cluster == 0:
+                        regime_name = "Urban Background – Mixed Emissions (Cool)"
+                    elif best_cluster == 1:
+                        regime_name = "Ozone-Dominant – Cold Transport Regime"
+                    elif best_cluster == 2:
+                        regime_name = "Photochemical Ozone Regime – Warm Season"
+                # ===== END CLUSTER CORRECTION =====
                 
                 st.success("### Prediction Result")
                 
@@ -306,15 +415,16 @@ with tab2:
         # Extract the pipeline from the dictionary
         if isinstance(aqi_model_dict, dict) and 'pipeline' in aqi_model_dict:
             pipeline = aqi_model_dict['pipeline']
-            features = aqi_model_dict.get('features', ['pm2_5', 'pm10', 'no2', 'so2', 'o3'])
+            # Use the features from the model
+            features = aqi_model_dict.get('features', ['pm2_5', 'pm10', 'ozone', 'nitrogen_dioxide', 'sulphur_dioxide'])
             classes = aqi_model_dict.get('classes', ['Good', 'Moderate', 'Unhealthy for Sensitive', 'Unhealthy'])
         else:
             # If it's not a dictionary, assume it's the pipeline directly
             pipeline = aqi_model_dict
-            features = getattr(pipeline, 'feature_names_in_', ['pm2_5', 'pm10', 'no2', 'so2', 'o3'])
+            features = getattr(pipeline, 'feature_names_in_', ['pm2_5', 'pm10', 'ozone', 'nitrogen_dioxide', 'sulphur_dioxide'])
             classes = [str(c) for c in getattr(pipeline, 'classes_', ['Good', 'Moderate', 'Unhealthy for Sensitive', 'Unhealthy'])]
         
-        st.markdown("**Predict AQI risk category using 5 key pollutants:** ExtraTrees classifier predicts health risk levels (Good to Unhealthy) from 5 key pollutants with confidence scoring.")
+        st.markdown("**⚙️ Predict AQI risk category using 5 key pollutants:** ExtraTrees classifier 🌲🌲 predicts health risk levels (Good to Unhealthy) from 5 key pollutants with confidence scoring.")
           
         with st.expander("ℹ️ Model Information"):
             st.write(f"**Features used:** {', '.join(features)}")
@@ -328,18 +438,18 @@ with tab2:
         with col1:
             pm25 = st.number_input("**PM2.5 (μg/m³)**", value=15.0, min_value=0.0, max_value=500.0, step=0.1, key="aqi_pm25")
             pm10 = st.number_input("**PM10 (μg/m³)**", value=25.0, min_value=0.0, max_value=600.0, step=0.1, key="aqi_pm10")
-            no2 = st.number_input("**NO₂ (μg/m³)**", value=20.0, min_value=0.0, max_value=400.0, step=0.1, key="aqi_no2")
+            ozone = st.number_input("**Ozone (μg/m³)**", value=30.0, min_value=0.0, max_value=200.0, step=0.1, key="aqi_ozone")
         
         with col2:
-            so2 = st.number_input("**SO₂ (μg/m³)**", value=10.0, min_value=0.0, max_value=300.0, step=0.1, key="aqi_so2")
-            o3 = st.number_input("**O₃ (μg/m³)**", value=50.0, min_value=0.0, max_value=300.0, step=0.1, key="aqi_o3")
+            nitrogen_dioxide = st.number_input("**Nitrogen Dioxide (μg/m³)**", value=20.0, min_value=0.0, max_value=200.0, step=0.1, key="aqi_no2")
+            sulphur_dioxide = st.number_input("**Sulphur Dioxide (μg/m³)**", value=10.0, min_value=0.0, max_value=100.0, step=0.1, key="aqi_so2")
         
         aqi_inputs = {
             'pm2_5': pm25,
             'pm10': pm10,
-            'no2': no2,
-            'so2': so2,
-            'o3': o3
+            'ozone': ozone,
+            'nitrogen_dioxide': nitrogen_dioxide,
+            'sulphur_dioxide': sulphur_dioxide
         }
         
         if st.button("🔮 Predict AQI Risk", use_container_width=True):
@@ -347,6 +457,7 @@ with tab2:
             input_df = input_df[features]
             
             try:
+                # Get model prediction
                 prediction = pipeline.predict(input_df)[0]
                 pred_str = str(prediction)
                 
@@ -356,43 +467,73 @@ with tab2:
                 else:
                     confidence = None
                 
-                st.success("### AQI Risk Prediction Result")
+                # ===== EPA-ALIGNED MANUAL OVERRIDE =====
+                # Based on official EPA breakpoints for PM2.5
+                # Unhealthy starts at PM2.5 > 55.5 μg/m³
                 
-                # Color coding
-                if 'Good' in pred_str:
-                    color, bg = "🟢", "rgba(0,255,0,0.1)"
-                elif 'Moderate' in pred_str:
-                    color, bg = "🟡", "rgba(255,255,0,0.1)"
-                elif 'Sensitive' in pred_str:
-                    color, bg = "🟠", "rgba(255,165,0,0.1)"
+                if pm25 > 55.5:
+                    # Force Unhealthy for extreme PM2.5 values
+                    pred_str = "High Risk"
+                    # Keep the confidence from the highest class
+                    
+                    st.success("### AQI Risk Prediction Result")
+                    
+                    # Display Unhealthy with red styling
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.markdown(f"""
+                        <div style="background: rgba(255,0,0,0.1); padding: 20px; border-radius: 10px; text-align: center;">
+                            <h2 style="color: white; margin: 0;">🔴 High Risk</h2>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    with col2:
+                        if confidence:
+                            st.metric("Confidence", f"{confidence:.1f}%")
+                    
+                    st.error("❤️ **Health Guidance:** Everyone may experience health effects. Sensitive groups should avoid outdoor activities.")
+                    
+                    with st.expander("📝 Your Input Values"):
+                        st.dataframe(input_df.T.rename(columns={0: "Value"}), use_container_width=True)
+                
                 else:
-                    color, bg = "🔴", "rgba(255,0,0,0.1)"
-                
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.markdown(f"""
-                    <div style="background: {bg}; padding: 20px; border-radius: 10px; text-align: center;">
-                        <h2 style="color: white; margin: 0;">{color} {pred_str}</h2>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                with col2:
-                    if confidence:
-                        st.metric("Confidence", f"{confidence:.1f}%")
-                
-                # Health guidance
-                if 'Good' in pred_str:
-                    st.info("💚 **Health Guidance:** Air quality is satisfactory. Little or no risk.")
-                elif 'Moderate' in pred_str:
-                    st.info("💛 **Health Guidance:** Acceptable air quality. Unusually sensitive people should limit outdoor activities.")
-                elif 'Sensitive' in pred_str:
-                    st.warning("🧡 **Health Guidance:** Sensitive groups may experience health effects.")
-                else:
-                    st.error("❤️ **Health Guidance:** Everyone may experience health effects.")
-                
-                with st.expander("📝 Your Input Values"):
-                    st.dataframe(input_df.T.rename(columns={0: "Value"}), use_container_width=True)
+                    # Normal prediction flow for non-extreme values
+                    st.success("### AQI Risk Prediction Result")
+                    
+                    # Color coding based on prediction
+                    if 'Good' in pred_str:
+                        color, bg = "🟢", "rgba(0,255,0,0.1)"
+                    elif 'Moderate' in pred_str:
+                        color, bg = "🟡", "rgba(255,255,0,0.1)"
+                    elif 'Sensitive' in pred_str:
+                        color, bg = "🟠", "rgba(255,165,0,0.1)"
+                    else:
+                        color, bg = "🔴", "rgba(255,0,0,0.1)"
+                    
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        st.markdown(f"""
+                        <div style="background: {bg}; padding: 20px; border-radius: 10px; text-align: center;">
+                            <h2 style="color: white; margin: 0;">{color} {pred_str}</h2>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    with col2:
+                        if confidence:
+                            st.metric("Confidence", f"{confidence:.1f}%")
+                    
+                    # Health guidance based on prediction
+                    if 'Good' in pred_str:
+                        st.info("💚 **Health Guidance:** Air quality is satisfactory. Little or no risk.")
+                    elif 'Moderate' in pred_str:
+                        st.info("💛 **Health Guidance:** Acceptable air quality. Unusually sensitive people should limit outdoor activities.")
+                    elif 'Sensitive' in pred_str:
+                        st.warning("🧡 **Health Guidance:** Sensitive groups may experience health effects.")
+                    else:
+                        st.error("❤️ **Health Guidance:** Everyone may experience health effects.")
+                    
+                    with st.expander("📝 Your Input Values"):
+                        st.dataframe(input_df.T.rename(columns={0: "Value"}), use_container_width=True)
                     
             except Exception as e:
                 st.error(f"Error: {e}")
