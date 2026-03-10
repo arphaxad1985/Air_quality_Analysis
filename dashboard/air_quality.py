@@ -383,7 +383,7 @@ st.info("""
 - **Predictions**: Weather regime clustering and AQI risk forecasting  
 """)
 
-st.caption("**Use the navigation buttons above or the sidebar to explore pages.**")
+st.caption("**☝️ Use the navigation buttons above or the sidebar to explore pages.👈**")
 
 # Add at the very bottom of air_quality.py
 import datetime

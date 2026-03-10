@@ -123,6 +123,17 @@ An ExtraTreesClassifier was trained to predict AQI health risk categories based 
 ### Hyperparameter Tuning
 Model performance was optimised using GridSearchCV with 2-fold cross-validation. The tuning process explored combinations of key parameters including: - n_estimators = 20 and to optimise the ExtraTrees classifier.
 
+### AQI Risk Category Mapping
+For the multiclass classification task, we transformed the continuous AQI values into four discrete risk categories based on the EPA Air Quality Index breakpoints:
+
+| Category | AQI Range | Description |
+|----------|-----------|-------------|
+| **Good** | 0-50 | Air quality is satisfactory with little or no health risk |
+| **Moderate** | 51-100 | Air quality is acceptable, but some pollutants may pose a moderate health concern for a small number of people |
+| **Sensitive** | 101-150 | Members of sensitive groups may experience health effects, but the general public is less likely to be affected |
+| **Health Risk** | >150 | Everyone may begin to experience health effects; sensitive groups may experience more serious effects |
+
+These thresholds create a balanced multiclass classification problem where the model learns to predict not just the numerical AQI value, but the corresponding health risk category based on meteorological conditions.
 ### Model Performance
 
 | Metric | Score |
@@ -135,26 +146,57 @@ Model performance was optimised using GridSearchCV with 2-fold cross-validation.
 The model demonstrates strong predictive performance for AQI risk classification across multiple pollutant and meteorological variables.
 
 ## Weather Regime Clustering Model
-K-Means clustering was used to identify dominant weather regimes. The optimal number of clusters was determined using the elbow method and silhouette analysis.
+PCA was used in dimesnsion reduction followed by K-Means clustering to identify dominant weather regimes. 
 
+## Dimension Reduction (PCA)
+See below the PCA cluster projection plot:
+![Air Quality Dashboard](figures/pca.png)
 ## Weather Regime Clustering
 
-K-Means clustering was used to identify dominant weather regimes influencing air pollution behaviour.
+K-Means clustering was used to identify dominant weather regimes influencing air pollution behaviour. The optimal number of clusters was determined using the elbow method and silhouette analysis.
 
 ### Cluster Validation
 Multiple cluster sizes were evaluated using elbow method and silhouette analysis to assess cluster separation and cohesion.
-Elbow plot
+### 1. The Elbow method 
+The elbow plot shows K = 4
+
 ![Air Quality Dashboard](figures/elbow.png)
+
+### 2. Silhoutte Validation
+- The average silhoutte score was K = 2 for different numbers of clusters.
+
+![Air Quality Dashboard](figures/silhoutte.png)
+
+- Analysis of optimal numer of K from silhoette plots
 
 | k | Observation |
 |---|---|
 | 2–3 | Insufficient granularity; distinct weather regimes were merged |
 | 4 | Majority of observations showed silhouette scores above the dataset average, indicating strong cluster separation |
 | 5–7 | Increased granularity but introduced thin or weakly populated clusters and slightly higher negative silhouette values |
-![Air Quality Dashboard](figures/silhoutte.png)
 
 **Selected k = 4** as the optimal configuration, balancing interpretability, cluster stability, and environmental regime differentiation.
+the silhoutte plot for 4 clusters is shown below.
+
 ![Air Quality Dashboard](figures/silhoutte_4.png)
+
+### Cluster Frequency
+![Air Quality Dashboard](figures/cluster_freq.png)
+
+### Feature Importance
+The plot below shows feature importance and relevant metrics.
+![Air Quality Dashboard](figures/feature_imp.png)
+
+### Cluster Profiling
+Achieved by calculating the mean values of each meteorological variable within each cluster. This allowed characterizing the distinct air-weather regimes based on their unique combinations of temperature, humidity, precipitation, wind speed, and surface pressure.
+
+![Air Quality Dashboard](figures/cluster_map.png)
+
+- **Cluster 0** Urban background - Mixed Emmissions (cool).
+- **Cluster 1** Ozone dominant - Cold Transprt regime.
+- **Cluster 2** Photochemical Ozone Regime (warm season).
+- **Cluster 3** Combustion - Dominant Pollution Episode
+
 ## Ethical Considerations
 
 **Data Attribution:** All meteorological and air quality data must be properly attributed to Open-Meteo under their CC BY 4.0 license, with clear disclosure of model limitations and uncertainties.
@@ -221,43 +263,71 @@ The app can be found at: https://arphaxad1985-air-quality-analysis-dashboardair-
 - Google Search with AI responses
 
 ## Repository Structure
-| Directory/File | Description |
-|----------------|-------------|
-| **air_quality_analysis/** | Project root |
-| ├── **dashboard/** | Streamlit dashboard application |
-| │   ├── `air_quality.py` | Main app entry point |
-| │   ├── **pages/** | Multi-page dashboard sections |
-| │   │   ├── `1_overview.py` | Dataset preview & basic statistics |
-| │   │   ├── `2_insights.py` | City comparisons & AQI health guidelines |
-| │   │   ├── `3_monitoring.py` | Trends & correlations |
-| │   │   └── `4_predictions.py` | ML predictions |
-| │   ├── `train_cluster_model.py` | Weather regime clustering training script |
-| │   ├── `train_aqi_classifier.py` | AQI risk classifier training script |
-| │   ├── `requirements.txt` | Dashboard-specific dependencies |
-| │   └── `logo.png` | ECO 4N6 company logo |
-| ├── **notebooks/** | Jupyter notebooks for EDA & model development |
-| │   ├── `01_data_collection.ipynb` | API data fetching from Open-Meteo |
-| │   ├── `02_eda_visualization.ipynb` | Exploratory data analysis |
-| │   ├── `03_clustering_analysis.ipynb` | K-Means & PCA for weather regimes |
-| │   └── `04_classification_modeling.ipynb` | ExtraTrees for AQI risk prediction |
-| ├── **datasets/** | Processed data |
-| │   ├── `dashboard_df.csv` | Final integrated dataset (360 records) |
-| │   ├── `weather_df.csv` | Additional weather data |
-| │   └── `air_quality_df.csv` | Additional air quality data |
-| ├── **models/** | Trained machine learning models |
-| │   ├── `weather_air_regime_cluster.pkl` | Original K-Means cluster model |
-| │   ├── `final_aqi_classifier.pkl` | Original ExtraTrees classifier |
-| │   ├── `weather_regime_cluster_v1.pkl` | Streamlit-optimized cluster model |
-| │   └── `aqi_risk_classifier_v5.pkl` | Streamlit-optimized AQI classifier |
-| ├── **figures/** | Images for documentation |
-| │   ├── `dashboard.png` | Dashboard preview screenshot |
-| │   ├── `silhoutte.png` | Silhouette analysis plot |
-| │   ├── `elbow.png` | Elbow method plot |
-| │   ├── `silhoutte_4.png` | Silhouette plot for k=4 |
-| │   └── `image.jpg` | Additional documentation image |
-| ├── `.gitignore` | Git ignore rules |
-| ├── `requirements.txt` | Project-wide dependencies |
-| └── `README.md` | Project documentation |
+```
+air_quality_analysis/
+├── dashboard/                          # Streamlit dashboard application
+│   ├── air_quality.py                   # Main app entry point
+│   ├── pages/                            # Multi-page dashboard sections
+│   │   ├── 1_overview.py                 # Dataset preview & basic statistics
+│   │   ├── 2_insights.py                 # City comparisons & AQI health guidelines
+│   │   ├── 3_monitoring.py                # Trends & correlations
+│   │   └── 4_predictions.py               # ML predictions
+│   ├── train_cluster_model.py             # Weather regime clustering training script
+│   ├── train_aqi_classifier.py            # AQI risk classifier training script
+│   ├── requirements.txt                   # Dashboard-specific dependencies
+│   └── logo.png                           # ECO 4N6 company logo
+│
+├── notebooks/                           # Jupyter notebooks for EDA & model development
+│   ├── 01_data_collection.ipynb          # API data fetching from Open-Meteo
+│   ├── 02_eda_visualization.ipynb        # Exploratory data analysis
+│   ├── 03_clustering_analysis.ipynb      # K-Means & PCA for weather regimes
+│   └── 04_classification_modeling.ipynb  # ExtraTrees for AQI risk prediction
+│
+├── datasets/                            # Processed data
+│   ├── dashboard_df.csv                  # Final integrated dataset (360 records)
+│   ├── weather_df.csv                    # Additional weather data
+│   └── air_quality_df.csv                # Additional air quality data
+│
+├── models/                               # Trained machine learning models
+│   ├── weather_air_regime_cluster.pkl     # Original K-Means cluster model
+│   ├── final_aqi_classifier.pkl           # Original ExtraTrees classifier
+│   ├── weather_regime_cluster_v1.pkl      # Streamlit-optimized cluster model
+│   └── aqi_risk_classifier_v5.pkl         # Streamlit-optimized AQI classifier
+│
+├── figures/                              # Images for documentation
+│   ├── dashboard.png                      # Dashboard preview screenshot
+│   ├── pca.png                            # PCA visualization with 4 clusters
+│   ├── cluster_freq.png                   # Cluster frequency distribution
+│   ├── feature_imp.png                     # Feature importance plot
+│   ├── cluster_map.png                     # Cluster mapping/interpretation
+│   ├── silhouette.png                      # Silhouette analysis plot
+│   ├── silhouette_4.png                    # Silhouette plot for k=4
+│   ├── elbow.png                           # Elbow method plot
+│   └── image.jpg                          # Additional documentation image
+│
+├── .gitignore                            # Git ignore rules
+├── requirements.txt                       # Project-wide dependencies
+└── README.md                              # Project documentation
+```
+
+## Future Improvements
+
+### Phase 1: Real-Time Implementation
+- [ ] Live weather data ingestion from Open-Meteo API
+- [ ] Automated daily model updates
+- [ ] Real-time AQI risk predictions for current conditions
+- [ ] Automated alert system for high-risk days
+
+### Phase 2: Temporal Expansion
+- [ ] Extend training data to 10 years for robust pattern detection
+- [ ] Add hourly predictions to capture diurnal pollution cycles
+- [ ] Analyze seasonal trends and anomalies
+
+### Phase 3: Geographic Coverage
+- [ ] Include 20+ cities across different climate zones
+- [ ] Compare urban vs. rural air quality patterns
+- [ ] Interactive map visualization
+
 
 ## Credits
 

@@ -342,7 +342,7 @@ with tab4:
 # Prediction Navigation
 st.markdown("---")
 st.subheader("🔮 Prediction Models")
-st.write("Explore atmospheric regime clustering and AQI risk forecasting")
+st.write("Explore atmospheric regime clustering and AQI risk forecasting 👇")
 
 if st.button("Go to Predictions Page", use_container_width=True):
     st.switch_page("pages/4_predictions.py")

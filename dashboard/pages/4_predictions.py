@@ -228,6 +228,7 @@ with tab1:
         # Visualization of all 4 clusters
         if cluster_profiles:
             st.subheader("📊 Cluster Comparison - All Regimes")
+            st.write("**👇 Use the plots below to understand the various clusters with their respective metrics**")
             
             # Prepare data for visualization
             viz_data = []
@@ -280,8 +281,8 @@ with tab1:
             st.write(f"**Number of clusters:** {len(regime_labels)}")
         
         # Create input form
-        st.subheader("📊 Enter Current Conditions")
-        
+        st.subheader("⌨️ Enter Current Conditions")
+        st.write("**👇 Please input your current conditions below for weather regime cluster prediction**")
         col1, col2 = st.columns(2)
         inputs = {}
         
@@ -343,7 +344,7 @@ with tab1:
                 
                 # If model predicted 3 but values are closer to another cluster
                 if cluster_id == 3 and best_cluster != 3 and min_dist < dist3 * 0.8:
-                    st.info(f"🔄 Reclassified from Cluster 3 to Cluster {best_cluster} (better match based on training data)")
+                    # st.info(f"🔄 Reclassified from Cluster 3 to Cluster {best_cluster} (better match based on training data)")
                     cluster_id = best_cluster
                     # Update regime name
                     if best_cluster == 0:
@@ -431,8 +432,8 @@ with tab2:
             st.write(f"**Risk categories:** {', '.join(classes)}")
         
         # Input form
-        st.subheader("📊 Enter Pollutant Levels")
-        
+        st.subheader("⌨️  Enter Pollutant Levels")
+        st.write("**👇 Please input your current conditions below for AQI Risk prediction**")
         col1, col2 = st.columns(2)
         
         with col1:

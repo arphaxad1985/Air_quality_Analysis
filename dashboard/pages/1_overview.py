@@ -147,7 +147,7 @@ st.markdown(
 st.markdown("---")
 
 st.title(" 📊 The Overview")
-st.markdown("**This Dashboard page covers:** (1.Dataset preview, 2.Basic statistics, and 3.Fundamental visualizations.) **Please scroll down for more details:**")
+st.markdown("**This Dashboard page covers:** (1.Dataset preview, 2.Basic statistics, and 3.Fundamental visualizations.) **Please scroll down for more details:👇**")
 st.markdown("""
 <style>
 @keyframes bounce {

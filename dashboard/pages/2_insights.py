@@ -85,7 +85,7 @@ st.markdown(
 )
 
 st.title(" 🔎 Insights")
-st.markdown("**This dashboard page covers:**  1.City by city comparisons against various polution metrics:  2. Detailed city statistics and 3. AQI Information and health guidelines")
+st.markdown("**This dashboard page covers:**  1.City by city comparisons against various polution metrics:  2. Detailed city statistics and 3. AQI Information and health guidelines👇")
 
 # Load data
 data_path = Path(__file__).parent.parent.parent / "datasets" / "dashboard_df.csv"
@@ -282,7 +282,7 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("---")
-st.markdown("**Please scroll down for more details.**")
+st.markdown("**👇 Please scroll down for more details.**")
 st.markdown("""
 <style>
 @keyframes bounce {
