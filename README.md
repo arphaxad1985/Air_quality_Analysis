@@ -241,9 +241,27 @@ Alongside side panel, a Machine Learning Models page that divides further into a
 
 2. Instead of training and fitting the data during clustering, the method just trains and gives a label which is subsequently used for supervised training as a label for metrics. Separate prediction on this cluster should have been used to get cluster IDs instead of label to enable smooth pipeline.
 
-## Deployment
+## Running the project Locally
+### Option 1. Use the Deployed App (Easiest)
 
 The app can be found at: https://arphaxad1985-air-quality-analysis-dashboardair-quality-6oh1ha.streamlit.app/
+
+### Option 2: Run Locally (For Developers)
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/arphaxadnguka1985/air_quality_analysis.git
+   cd air_quality_analysis
+2. **Set up virtual environment (optional but recommended)**
+### On macOS/Linux:
+- python -m venv venv
+- source venv/bin/activate
+### On Windows:
+- python -m venv venv
+- venv\Scripts\activate
+3. **Install dependencies**
+- pip install -r requirements.txt
+4. **Launch the dashboard**
+- streamlit run dashboard/air_quality.py
 
 ## Main Data Analysis Libraries/ Requirements
 
